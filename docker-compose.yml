@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  database:
+    container_name: transfers-db
+    build:
+      context: .
+      dockerfile: database.Dockerfile
+    ports:
+      - "5432:5432"
+    networks:
+      - transfers-net
+
+  transfers-app:
+    container_name: transfers-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    environment:
+#      - POSTGRES_HOST=jdbc:postgresql://transfers-db:5432/transfers
+#      - POSTGRES_PASSWORD=admin
+#      - POSTGRES_HOST=jdbc:postgresql://localhost:5432/transfers
+    ports:
+      - "8080:8080"
+    networks:
+      - transfers-net
+    depends_on:
+      - database
+
+networks:
+  transfers-net:
+    driver: bridge
