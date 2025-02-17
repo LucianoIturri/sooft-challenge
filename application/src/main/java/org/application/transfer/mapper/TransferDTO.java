@@ -26,6 +26,5 @@ public class TransferDTO {
     private String date;
     @JsonProperty("enterprise_id")
     @NotNull("Enterprise id cannot be null")
-    @JsonIgnore
     private Integer enterpriseId;
 }

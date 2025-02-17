@@ -59,7 +59,7 @@ public class EnterpriseService {
         return parsedEnterprises;
     }
 
-    private List<EnterpriseDTO> dtoParser(List<Enterprise> enterprises){
+    public List<EnterpriseDTO> dtoParser(List<Enterprise> enterprises){
         return enterprises.stream()
                 .map(enterprise -> {
                     List<TransferDTO> dtoTransfers = new ArrayList<TransferDTO>();

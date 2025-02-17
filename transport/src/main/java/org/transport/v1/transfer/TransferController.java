@@ -22,7 +22,7 @@ public class TransferController {
     }
 
     @PostMapping(path = "/create")
-    @Operation(summary = "New transfer", description = "It creates a new enterprise transfer")
+    @Operation(summary = "New transfer", description = "It creates a new enterprise transfer", tags = "Transfers")
     public ResponseEntity<TransferDTO> create(@RequestBody TransferDTO transferDTO) throws Exception {
         TransferDTO transfer = service.createTransfer(transferDTO);
         return ResponseEntity.ok(transfer);

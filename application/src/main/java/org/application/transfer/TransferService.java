@@ -27,7 +27,7 @@ public class TransferService {
         return transferDTO;
     }
 
-    private Transfer mapper(TransferDTO transferDTO) {
+    public Transfer mapper(TransferDTO transferDTO) {
         return Transfer.builder()
                 .id(transferDTO.getId())
                 .amount(transferDTO.getAmount())
