@@ -1,5 +1,6 @@
 package org.domain.model.transfer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,9 @@ public class Transfer {
     private String creditAccount;
     @Column(name = "debit_account")
     private String debitAccount;
+    private String date;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "enterprise_id", nullable = false)
+    @JsonIgnore
     private Enterprise enterprise;
 }

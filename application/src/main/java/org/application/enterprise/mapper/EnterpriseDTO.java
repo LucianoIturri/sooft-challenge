@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class EnterpriseDTO {
+    private Integer id;
     @JsonProperty("cuit")
     @NotNull("CUIT name cannot be null")
     private String cuit;

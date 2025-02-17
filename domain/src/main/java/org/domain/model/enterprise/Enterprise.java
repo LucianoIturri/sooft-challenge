@@ -1,10 +1,8 @@
 package org.domain.model.enterprise;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.domain.model.transfer.Transfer;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +18,12 @@ public class Enterprise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @NotNull("CUIT cannot be null")
     private String cuit;
     @Column(name = "company_name")
-    @NotNull("Company name cannot be null")
     private String companyName;
     @Column(name = "accession_date")
     private String accessionDate;
     @OneToMany(targetEntity = Transfer.class, cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "enterprise")
+    @ToString.Exclude
     private List<Transfer> transfers;
 }

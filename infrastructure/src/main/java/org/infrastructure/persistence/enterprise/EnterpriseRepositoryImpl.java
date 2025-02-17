@@ -1,7 +1,6 @@
 package org.infrastructure.persistence.enterprise;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Query;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -26,24 +25,32 @@ public class EnterpriseRepositoryImpl implements EnterpriseRepository {
     @Override
     @Transactional
     public void accession(Enterprise enterprise) {
-        try{
-        entityManager.persist(enterprise);
-        }catch (TransactionRequiredException e){
+        try {
+            entityManager.persist(enterprise);
+        } catch (TransactionRequiredException e) {
             log.error(e.getMessage());
             throw new TransactionRequiredException(e.getMessage(), e);
         }
     }
 
     @Override
-    public List<Enterprise> enterprisesTransfers() {
-        return null;
+    public List<Enterprise> enterprisesTransfers(String dateFilter) {
+        try {
+            String jpql = "SELECT e FROM Enterprise e JOIN e.transfers t WHERE t.date >= :dateFilter";
+            TypedQuery<Enterprise>  query = entityManager.createQuery(jpql, Enterprise.class);
+            query.setParameter("dateFilter", dateFilter);
+            return query.getResultList();
+        } catch (Exception e) {
+            throw new RuntimeException("Error trying to get enterprises: " + e.getMessage(), e);
+        }
     }
+
 
     @Override
     public List<Enterprise> newerEnterprises(String dateFilter) {
         try {
-            String nativeQuery = "SELECT e FROM Enterprise e WHERE e.accessionDate >= :dateFilter";
-            Query query = entityManager.createQuery(nativeQuery, Enterprise.class);
+            String jpql = "SELECT e FROM Enterprise e WHERE e.accessionDate >= :dateFilter";
+            TypedQuery<Enterprise>  query = entityManager.createQuery(jpql, Enterprise.class);
             query.setParameter("dateFilter", dateFilter);
             return query.getResultList();
         } catch (Exception e) {

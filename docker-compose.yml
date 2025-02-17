@@ -9,6 +9,10 @@ services:
       - "5432:5432"
     networks:
       - transfers-net
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "admin" ]
+      interval: 10s
+      retries: 5
 
   transfers-app:
     container_name: transfers-app
@@ -16,9 +20,9 @@ services:
       context: .
       dockerfile: Dockerfile
 #    environment:
-#      - POSTGRES_HOST=jdbc:postgresql://transfers-db:5432/transfers
-#      - POSTGRES_PASSWORD=admin
-#      - POSTGRES_HOST=jdbc:postgresql://localhost:5432/transfers
+#        - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/transfers
+#        - SPRING_DATASOURCE_USERNAME=admin
+#        - SPRING_DATASOURCE_PASSWORD=admin
     ports:
       - "8080:8080"
     networks:

@@ -1,8 +1,9 @@
 package org.application.enterprise;
 
 import org.application.ApplicationLayerTests;
-import org.domain.model.enterprise.Enterprise;
+import org.application.enterprise.mapper.EnterpriseDTO;
 import org.domain.port.enterprise.EnterpriseRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,11 +25,12 @@ public class EnterpriseServiceTests {
     @Test
     public void save(){
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("YYYY-mm-dd"));
-        Enterprise enterprise = Enterprise.builder()
+        EnterpriseDTO enterprise = EnterpriseDTO.builder()
                 .cuit("123345")
                 .companyName("TEST ENTERPRISE")
                 .accessionDate(date)
                 .build();
-        Enterprise createdEnterprise = service.createEnterprise(enterprise);
+        EnterpriseDTO createdEnterprise = service.accession(enterprise);
+        Assertions.assertEquals(enterprise, createdEnterprise);
     }
 }

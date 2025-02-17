@@ -17,7 +17,8 @@ CREATE TABLE public.transfers (
 	amount float NULL,
 	credit_account varchar NOT NULL,
 	debit_account varchar NOT NULL,
-	enterprises_pk bigint NOT NULL,
+	"date" varchar NOT NULL,
+	enterprise_id bigint NOT NULL,
 	CONSTRAINT transfers_pk PRIMARY KEY (id),
-	CONSTRAINT enterprises_fk FOREIGN KEY (enterprises_pk) REFERENCES public.enterprises(id) ON DELETE CASCADE ON UPDATE CASCADE
+	CONSTRAINT enterprise_fk FOREIGN KEY (enterprise_id) REFERENCES public.enterprises(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

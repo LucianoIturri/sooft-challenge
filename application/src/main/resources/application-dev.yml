@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: transfers-database
+
+  datasource:
+    url: jdbc:postgresql://database:5432/transfers
+    username: admin
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        jdbc:
+          datasource: DEBUG
+      zaxxer:
+        hikari: DEBUG

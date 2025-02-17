@@ -28,9 +28,16 @@ public class EnterpriseController {
     }
 
     @GetMapping(path = "/newer")
-    @Operation(summary = "Filter enterprises by date range", description = "Newer enterprises will be displayed")
+    @Operation(summary = "Filter newer enterprises", description = "Newer enterprises will be displayed")
     public ResponseEntity<List<EnterpriseDTO>> findNewerEnterprises() {
-        List<EnterpriseDTO> enterprises = service.findPostsByDateRange();
+        List<EnterpriseDTO> enterprises = service.newerEnterprises();
+        return ResponseEntity.ok().body(enterprises);
+    }
+
+    @GetMapping(path = "/last-transfers")
+    @Operation(summary = "Last transfers", description = "Enterprises that had transferred money in the last month")
+    public ResponseEntity<List<EnterpriseDTO>> lastEnterprisesTransfers() {
+        List<EnterpriseDTO> enterprises = service.lastEnterprisesTransfers();
         return ResponseEntity.ok().body(enterprises);
     }
 }
