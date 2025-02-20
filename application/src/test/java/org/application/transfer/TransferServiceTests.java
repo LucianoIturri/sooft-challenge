@@ -27,7 +27,7 @@ public class TransferServiceTests {
     void testCreateTransfer_Success() {
         TransferDTO transferDTO = new TransferDTO(1, Float.valueOf(1000), "ACC123", "ACC456", LocalDate.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        ),0);
+        ), 0);
         TransferDTO result = service.createTransfer(transferDTO);
         Assertions.assertNotNull(result.getDate());
     }
@@ -41,7 +41,7 @@ public class TransferServiceTests {
     void testCreateTransfer_BorderCase_ZeroAmount() {
         TransferDTO transferDTO = new TransferDTO(1, Float.valueOf(0), "ACC123", "ACC456", LocalDate.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        ),0);
+        ), 0);
         TransferDTO result = service.createTransfer(transferDTO);
         Assertions.assertEquals(Float.valueOf(0), result.getAmount());
     }
@@ -50,7 +50,7 @@ public class TransferServiceTests {
     void testMapper_Success() {
         TransferDTO transferDTO = new TransferDTO(3, Float.valueOf(500), "ACC555", "ACC666", LocalDate.now().format(
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        ),0);
+        ), 0);
         Transfer result = service.mapper(transferDTO);
         Assertions.assertEquals(transferDTO.getId(), result.getId());
         Assertions.assertEquals(transferDTO.getAmount(), result.getAmount());
@@ -64,8 +64,9 @@ public class TransferServiceTests {
     @Test
     void testMapper_BorderCase_EmptyFields() {
         TransferDTO transferDTO = new TransferDTO();
-        Transfer result = service.mapper(transferDTO);
-        Assertions.assertNull(result.getId());
-        Assertions.assertNull(result.getCreditAccount());
+        // null param
+        Assertions.assertThrows(NullPointerException.class, () -> service.mapper(null));
+        // empty param
+        Assertions.assertThrows(IllegalStateException.class, () -> service.mapper(transferDTO));
     }
 }

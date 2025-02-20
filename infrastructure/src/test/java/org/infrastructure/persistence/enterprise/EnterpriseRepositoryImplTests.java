@@ -49,6 +49,11 @@ public class EnterpriseRepositoryImplTests {
     }
 
     @Test
+    public void testAccession_Failure_ParamIsNull() {
+        Assertions.assertThrows(NullPointerException.class, () -> repository.accession(null));
+    }
+
+    @Test
     public void testEnterprisesTransfers_Success() {
         String dateFilter = "2024-01-01";
         List<Enterprise> expectedEnterprises = List.of(

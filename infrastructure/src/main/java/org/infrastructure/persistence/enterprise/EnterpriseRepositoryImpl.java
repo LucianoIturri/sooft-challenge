@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -26,6 +27,7 @@ public class EnterpriseRepositoryImpl implements EnterpriseRepository {
     @Transactional
     public void accession(Enterprise enterprise) {
         try {
+            Objects.requireNonNull(enterprise);
             entityManager.persist(enterprise);
         } catch (TransactionRequiredException e) {
             log.error(e.getMessage());

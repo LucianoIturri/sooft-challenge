@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
+import java.util.Objects;
 
 @Repository
 @Slf4j
@@ -24,6 +25,7 @@ public class TransferRepositoryImpl implements TransferRepository {
     @Override
     public void save(Transfer transfer) {
         try {
+            Objects.requireNonNull(transfer);
             entityManager.persist(transfer);
         } catch (RuntimeException e) {
             log.error(e.getMessage());
