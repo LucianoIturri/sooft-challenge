@@ -1,6 +1,7 @@
 package org.infrastructure.persistence.enterprise;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.QueryTimeoutException;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
 import org.domain.model.enterprise.Enterprise;
@@ -79,12 +80,12 @@ public class EnterpriseRepositoryImplTests {
     public void testEnterprisesTransfers_Fail() {
         String dateFilter = "2024-01-01";
         TypedQuery<Enterprise> queryMock = mock(TypedQuery.class);
-        when(queryMock.getResultList()).thenThrow(new RuntimeException("Database error"));
+        when(queryMock.getResultList()).thenThrow(new QueryTimeoutException("Enterprise transfers: Query execution timed out: "));
         when(entityManager.createQuery(anyString(), eq(Enterprise.class))).thenReturn(queryMock);
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
+        QueryTimeoutException exception = Assertions.assertThrows(QueryTimeoutException.class, () -> {
             repository.enterprisesTransfers(dateFilter);
         });
-        Assertions.assertEquals("Error trying to get enterprises: Database error", exception.getMessage());
+        Assertions.assertEquals("Enterprise transfers: Query execution timed out: ", exception.getMessage());
     }
 
     @Test
@@ -114,11 +115,11 @@ public class EnterpriseRepositoryImplTests {
     public void testNewerEnterprises_Fail() {
         String dateFilter = "2024-01-01";
         TypedQuery<Enterprise> queryMock = mock(TypedQuery.class);
-        when(queryMock.getResultList()).thenThrow(new RuntimeException("Database error"));
+        when(queryMock.getResultList()).thenThrow(new QueryTimeoutException("Newer enterprises: Query execution timed out: "));
         when(entityManager.createQuery(anyString(), eq(Enterprise.class))).thenReturn(queryMock);
-        RuntimeException exception = Assertions.assertThrows(RuntimeException.class, () -> {
+        QueryTimeoutException exception = Assertions.assertThrows(QueryTimeoutException.class, () -> {
             repository.newerEnterprises(dateFilter);
         });
-        Assertions.assertEquals("Error trying to get enterprises: Database error", exception.getMessage());
+        Assertions.assertEquals("Newer enterprises: Query execution timed out: ", exception.getMessage());
     }
 }

@@ -1,6 +1,5 @@
 package org.transport.v1.enterprise;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.application.enterprise.EnterpriseService;
 import org.application.enterprise.mapper.EnterpriseDTO;
@@ -13,15 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +65,7 @@ public class EnterpriseControllerTest {
     }
 
     @Test
-    void shouldReturnLastEnterprisesTransfers() throws Exception {
+    public void shouldReturnLastEnterprisesTransfers() throws Exception {
         List<EnterpriseDTO> enterprises = Arrays.asList(
                 EnterpriseDTO.builder()
                         .id(1)
@@ -91,5 +89,29 @@ public class EnterpriseControllerTest {
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].name").value("AWESOME COMPANY"))
                 .andExpect(jsonPath("$[1].name").value("AWESOME COMPANY II"));
+    }
+
+    @Test
+    public void shouldNotCreateEnterprise_Failure_NullOrEmptyRequiredParams() throws Exception {
+        EnterpriseDTO requestDTO = EnterpriseDTO.builder()
+                .cuit("")
+                .companyName("")
+                .build();
+
+        mockMvc.perform(post("/api/v1/enterprise/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().is4xxClientError());
+
+        EnterpriseDTO nullRequest = new EnterpriseDTO();
+        nullRequest.setId(null);
+        nullRequest.setCuit(null);
+        nullRequest.setCompanyName(null);
+        nullRequest.setAccessionDate(null);
+        nullRequest.setTransfers(null);
+        mockMvc.perform(post("/api/v1/enterprise/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(nullRequest)))
+                .andExpect(status().is4xxClientError());
     }
 }

@@ -1,6 +1,7 @@
 package org.infrastructure.persistence.transfer;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TransactionRequiredException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.domain.model.transfer.Transfer;
@@ -27,9 +28,9 @@ public class TransferRepositoryImpl implements TransferRepository {
         try {
             Objects.requireNonNull(transfer);
             entityManager.persist(transfer);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage());
-            throw new RuntimeException(e.getMessage(), e);
+        } catch (TransactionRequiredException e) {
+            log.error("Save transfer: TransactionRequiredException occurred while processing request:", e);
+            throw new TransactionRequiredException("Save transfer: A transaction is required for this operation but is missing", e);
         }
     }
 }

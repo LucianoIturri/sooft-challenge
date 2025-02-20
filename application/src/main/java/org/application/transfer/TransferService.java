@@ -20,6 +20,11 @@ public class TransferService {
     }
 
     public TransferDTO createTransfer(TransferDTO transferDTO) {
+        /*
+         * Create a new company transfer with all their needed fields
+         * @param TransferDTO
+         * @return TransferDTO
+         * */
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         transferDTO.setDate(date);
         Transfer transfer = mapper(transferDTO);
@@ -28,6 +33,12 @@ public class TransferService {
     }
 
     public Transfer mapper(TransferDTO transferDTO) {
+        /*
+         * Application layer is the intermediary between transport layer and domain layer, we use a DTO to
+         * transport info, and then we need to parse in their "associated" object, in this case: Transfer
+         * @param TransferDTO
+         * @return Transfer
+         * */
         return Transfer.builder()
                 .id(transferDTO.getId())
                 .amount(transferDTO.getAmount())

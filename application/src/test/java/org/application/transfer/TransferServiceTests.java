@@ -66,7 +66,5 @@ public class TransferServiceTests {
         TransferDTO transferDTO = new TransferDTO();
         // null param
         Assertions.assertThrows(NullPointerException.class, () -> service.mapper(null));
-        // empty param
-        Assertions.assertThrows(IllegalStateException.class, () -> service.mapper(transferDTO));
     }
 }

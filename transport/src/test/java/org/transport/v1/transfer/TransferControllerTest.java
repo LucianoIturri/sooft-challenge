@@ -1,6 +1,7 @@
 package org.transport.v1.transfer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.application.enterprise.mapper.EnterpriseDTO;
 import org.application.transfer.TransferService;
 import org.application.transfer.mapper.TransferDTO;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,5 +70,20 @@ public class TransferControllerTest {
                 .andExpect(jsonPath("$.debit_account").value("0800"))
                 .andExpect(jsonPath("$.date").value(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))))
                 .andExpect(jsonPath("$.enterprise_id").value(1));
+    }
+
+    @Test
+    public void shouldNotCreateTransfer_Failure_NullOrEmptyRequiredParams() throws Exception {
+        TransferDTO requestDTO = TransferDTO.builder()
+                .amount(null)
+                .debitAccount("")
+                .creditAccount("")
+                .enterpriseId(null)
+                .build();
+
+        mockMvc.perform(post("/api/v1/transfer/create")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDTO)))
+                .andExpect(status().is4xxClientError());
     }
 }

@@ -1,6 +1,7 @@
 package org.infrastructure.persistence.enterprise;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.QueryTimeoutException;
 import jakarta.persistence.TransactionRequiredException;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
@@ -30,20 +31,22 @@ public class EnterpriseRepositoryImpl implements EnterpriseRepository {
             Objects.requireNonNull(enterprise);
             entityManager.persist(enterprise);
         } catch (TransactionRequiredException e) {
-            log.error(e.getMessage());
-            throw new TransactionRequiredException(e.getMessage(), e);
+            log.error("Enterprise accession: TransactionRequiredException occurred while processing request:", e);
+            throw new TransactionRequiredException("Enterprise accession: A transaction is required for this operation but is missing", e);
         }
     }
 
     @Override
     public List<Enterprise> enterprisesTransfers(String dateFilter) {
         try {
+            Objects.requireNonNull(dateFilter);
             String jpql = "SELECT e FROM Enterprise e JOIN e.transfers t WHERE t.date >= :dateFilter";
             TypedQuery<Enterprise>  query = entityManager.createQuery(jpql, Enterprise.class);
             query.setParameter("dateFilter", dateFilter);
             return query.getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error trying to get enterprises: " + e.getMessage(), e);
+        } catch (QueryTimeoutException e) {
+            log.error("Enterprise transfers: Could not finishing operation due a time out exception", e);
+            throw new QueryTimeoutException("Enterprise transfers: Query execution timed out: ", e);
         }
     }
 
@@ -51,12 +54,14 @@ public class EnterpriseRepositoryImpl implements EnterpriseRepository {
     @Override
     public List<Enterprise> newerEnterprises(String dateFilter) {
         try {
+            Objects.requireNonNull(dateFilter);
             String jpql = "SELECT e FROM Enterprise e WHERE e.accessionDate >= :dateFilter";
             TypedQuery<Enterprise>  query = entityManager.createQuery(jpql, Enterprise.class);
             query.setParameter("dateFilter", dateFilter);
             return query.getResultList();
-        } catch (Exception e) {
-            throw new RuntimeException("Error trying to get enterprises: " + e.getMessage(), e);
+        } catch (QueryTimeoutException e) {
+            log.error("Newer enterprises: Could not finishing operation due a time out exception", e);
+            throw new QueryTimeoutException("Newer enterprises: Query execution timed out: ", e);
         }
     }
 }
